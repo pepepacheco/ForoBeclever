@@ -13,6 +13,7 @@ class Foro {
     vector<Usuario> *usuarios;
     public:
         Foro(string nombre);
+        string getNombre() {return this->nombre;}
         vector<Tema>* getTemas(){return this->temas;}
         vector<Usuario>* getUsuarios() {return this->usuarios;}
         int numTemas() {return temas->size();}

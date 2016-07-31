@@ -10,6 +10,7 @@ class Vista {
         void mensajeInicial();
         void registro();
         void login();
+        void vistaForo(Usuario *u);
 };
 
 #endif 
