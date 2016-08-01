@@ -11,6 +11,7 @@ class Tema {
     
     public:
         Tema(string denominacion):denominacion(denominacion){}
+        string getDenominacion() {return this->denominacion;}
         int numeroHilo() {return this->hilos.size();}
         Hilo verHilo(int numHilo) {return this->hilos.at(numHilo);}
         Hilo *nuevoHilo(string titulo, Mensaje *mensajeInicial);

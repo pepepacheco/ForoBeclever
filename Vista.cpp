@@ -94,7 +94,7 @@ void Vista::login() {
             if (!login)
                 cout << "\nLogin incorrecto\n" << endl;
         }
-        while (!login);       
+        while (!login);     
         
 }
 
@@ -111,14 +111,13 @@ void Vista::vistaForo(Usuario *u) {
         cin >> resultado;       
         switch (resultado) {
             case 1:
-                cout << "Elegido 1" << endl;
+                crearTema(u);
                 break;
             case 2:
-                cout << "Elegido 2" << endl;
+                verTemas(u);
                 break;
             case 3:
                 cout << "Elegido 3" << endl;
-                exit(0);
                 break;
             case 4:
                 mensajeInicial();
@@ -126,9 +125,95 @@ void Vista::vistaForo(Usuario *u) {
                 continue;       
         }
     break;
-}
+    }
 }
 
+void Vista::crearTema(Usuario *u) {
+    string titulo;
+    cout << "\nIntroduce el titulo del tema" << endl;
+    cin.ignore();
+    getline(cin, titulo);
+    foro->nuevoTema(titulo);
+    cout << "Nuevo tema: " << "\"" << titulo << "\"" << " creado correctamente" << endl;
+    vistaForo(u);
+    
+}
+
+void Vista::verTemas(Usuario* u) {
+    int numeroTema;
+    Tema *t;
+    cout << "\nTemas" << endl
+    << "====================================================\n" << endl; 
+    
+    for (int i = 0; i < foro->numTemas(); i++) {
+        cout << i+1 << "-> " << foro->verTema(i)->getDenominacion() << endl;
+    }
+    
+    do {
+        cout << "Introduce el numero de tema para acceder a el" << endl
+        << "0 para volver al menu principal" << endl;
+        cin >> numeroTema;
+    }
+    while(!(numeroTema >= 0 && numeroTema <= foro->numTemas()));
+    
+    if (numeroTema == 0)
+        vistaForo(u);
+    else {
+        t = foro->verTema(numeroTema);
+        menuTema(u, t);
+    }
+    
+}
+
+void Vista::menuTema(Usuario*u, Tema *t) {
+    int resultado;
+    
+    cout << "\nBIENVENIDO " << u->getNombre() << " al Tema: \"" << t->getDenominacion() << "\"" << endl
+    << "====================================================\n" << endl;
+    
+    while (true) {       
+        cout << "1: Nuevo hilo" <<endl
+        << "2: Ver hilos" << endl
+        << "3: Buscar hilo por nombre " << endl
+        << "4: Volver al menu de temas" << endl;        
+        cin >> resultado;       
+        switch (resultado) {
+            case 1:
+                crearHilo(u, t);
+                break;
+            case 2:
+                verHilos(u, t);
+                break;
+            case 3:
+                cout << "Elegido 3" << endl;
+                break;
+            case 4:
+                verTemas(u);
+            default:
+                continue;      
+        }
+    break;
+    }
+}
+
+void Vista::crearHilo(Usuario* u, Tema *t) {
+    string titulo;
+    string mensajeInicial;
+    
+    cout << "\nIntroduce un titulo" << endl;
+    cin.ignore();
+    getline(cin, titulo);
+    
+    cout << "\nIntroduce un mensaje inicial" << endl;
+    cin.ignore();
+    getline(cin, mensajeInicial);
+    
+    t->nuevoHilo(titulo, new Mensaje(mensajeInicial, u));   
+}
+
+void Vista::verHilos(Usuario* u, Tema* t) {
+    
+}
 
 
 
