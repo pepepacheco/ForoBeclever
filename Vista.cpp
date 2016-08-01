@@ -1,6 +1,5 @@
 #include "Vista.h"
 #include <iostream>
-#include <vector>
 #include <stdlib.h>
 
 using namespace std;
@@ -121,6 +120,7 @@ void Vista::vistaForo(Usuario *u) {
                 break;
             case 4:
                 mensajeInicial();
+                break;
             default:
                 continue;       
         }
@@ -143,26 +143,32 @@ void Vista::verTemas(Usuario* u) {
     int numeroTema;
     Tema *t;
     cout << "\nTemas" << endl
-    << "====================================================\n" << endl; 
+    << "====================================================\n" << endl;   
     
-    for (int i = 0; i < foro->numTemas(); i++) {
-        cout << i+1 << "-> " << foro->verTema(i)->getDenominacion() << endl;
+    if (foro->numTemas() > 0) {
+        for (int i = 0; i < foro->numTemas(); i++) {
+            cout << i + 1 << "-> " << foro->verTema(i)->getDenominacion() << " | Creado por: " << u->getAlias() << endl;
+        }
+
+        do {
+            cout << "\nIntroduce el numero de tema para acceder a el" << endl
+                    << "0 para volver al menu principal" << endl;
+            cin >> numeroTema;
+        }
+        while (!(numeroTema >= 0 && numeroTema <= foro->numTemas()));
+
+        if (numeroTema == 0)
+            vistaForo(u);
+        else {
+            t = foro->verTema(numeroTema - 1);
+            menuTema(u, t);
+        }        
     }
+    else
+        cout << "0" << endl;
     
-    do {
-        cout << "Introduce el numero de tema para acceder a el" << endl
-        << "0 para volver al menu principal" << endl;
-        cin >> numeroTema;
-    }
-    while(!(numeroTema >= 0 && numeroTema <= foro->numTemas()));
-    
-    if (numeroTema == 0)
-        vistaForo(u);
-    else {
-        t = foro->verTema(numeroTema);
-        menuTema(u, t);
-    }
-    
+    vistaForo(u);
+   
 }
 
 void Vista::menuTema(Usuario*u, Tema *t) {
@@ -189,6 +195,7 @@ void Vista::menuTema(Usuario*u, Tema *t) {
                 break;
             case 4:
                 verTemas(u);
+                break;
             default:
                 continue;      
         }
@@ -208,13 +215,103 @@ void Vista::crearHilo(Usuario* u, Tema *t) {
     cin.ignore();
     getline(cin, mensajeInicial);
     
-    t->nuevoHilo(titulo, new Mensaje(mensajeInicial, u));   
+    t->nuevoHilo(titulo, new Mensaje(mensajeInicial, u));
+    cout << "Nuevo hilo: " << "\"" << titulo << "\"" << " creado correctamente" << endl;
+    
+    menuTema(u, t);
 }
 
 void Vista::verHilos(Usuario* u, Tema* t) {
+    int numeroHilo;
+    Hilo *h;
+    cout << "\nHilos" << endl
+    << "====================================================\n" << endl;  
+
+    if (t->numeroHilo() > 0) {
+        for (int i = 0; i < t->numeroHilo(); i++) {
+            cout << "Hilo " << i + 1 << "-> " << t->verHilo(i)->getTitulo() << " | Creado por: " << u->getAlias() << endl
+            << t->verHilo(i)->getMensajes()->at(0).getContenido() << endl;
+        }
+
+        do {
+            cout << "\nIntroduce el numero de hilo para acceder a el" << endl
+                    << "0 para volver al menu de temas" << endl;
+            cin >> numeroHilo;
+        } while (!(numeroHilo >= 0 && numeroHilo <= t->numeroHilo()));
+
+        if (numeroHilo == 0)
+            menuTema(u, t);
+        else {
+            h = t->verHilo(numeroHilo - 1);
+            menuHilo(u, t, h);
+        }
+    }
+    else
+        cout << "0" << endl;
     
+    menuTema(u, t);
+
 }
 
+void Vista::menuHilo(Usuario* u, Tema *t, Hilo* h) {
+    int resultado;
+
+    cout << "\nBIENVENIDO " << u->getNombre() << " al Hilo: \"" << h->getTitulo() << "\"" << endl
+    << "====================================================\n" << endl;
+    
+    while (true) {       
+        cout << "1: Nuevo mensaje" <<endl
+        << "2: Ver mensajes" << endl
+        << "3: Volver al menu de hilos " << endl;     
+        cin >> resultado;       
+        switch (resultado) {
+            case 1:
+                crearMensaje(u, t, h);
+                break;
+            case 2:
+                verMensajes(u, t, h);
+                break;
+            case 3:
+                verHilos(u, t);
+                break;
+            default:
+                continue;      
+        }
+    break;
+    }
+}
+
+void Vista::crearMensaje(Usuario* u, Tema* t, Hilo* h) {
+    string contenidoMensaje;
+    
+    cout << "\nEscribe un mensaje" << endl;
+    cin.ignore();
+    getline(cin, contenidoMensaje);
+    
+    h->nuevoMensaje(contenidoMensaje, u);
+    
+    menuHilo(u, t, h);
+}
+
+void Vista::verMensajes(Usuario* u, Tema* t, Hilo* h) {
+    char caracter = ' ';
+
+    cout << "\nMensajes" << endl
+    << "====================================================\n" << endl;    
+    
+    for (int i = 0; i < h->numMensajes(); i++) {
+        cout << i+1 << "-> " << "Autor: " << h->verMensaje(i).verAutor()->getAlias() << " | Fecha: " << h->verMensaje(i).getFecha()->getFecha() << endl
+        << "Mensaje: " << endl << h->verMensaje(i).getContenido() << endl << endl;
+    }
+    
+    do {
+        cout << "\nPulse una tecla para regresar" << endl;
+        cin >> caracter;
+    }
+    while (caracter == ' ');
+    
+    menuHilo(u, t, h);
+}
 
 
 

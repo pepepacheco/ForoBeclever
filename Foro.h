@@ -4,7 +4,7 @@
 
 #include "Tema.h"
 #include "Usuario.h"
-#include <vector>
+
 using namespace std;
 
 class Foro {

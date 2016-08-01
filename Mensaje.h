@@ -12,7 +12,9 @@ class Mensaje {
     Usuario *autor;
     public:
         Mensaje(string contenido, Usuario *autor):contenido(contenido), autor(autor){fecha = new Fecha();}
-        Usuario *verAutor();
+        Fecha *getFecha(){return this->fecha;}
+        string getContenido() {return this->contenido;}
+        Usuario *verAutor(){return this->autor;}
         ~Mensaje(){};
 };
 

@@ -1,6 +1,5 @@
 #include <ctime>
 #include "Fecha.h"
-#include <sstream>
 
 using namespace std;
 
@@ -15,7 +14,7 @@ Fecha::Fecha() {
 
 string Fecha::getFecha() {
     ostringstream fec;
-    fec << this->dia << "/" << this->mes << "/" << this->anio << endl << this->hora->getHora();
+    fec << this->dia << "/" << this->mes << "/" << this->anio << " " << this->hora->getHora();
     string fecha = fec.str();
     return fecha;
 }

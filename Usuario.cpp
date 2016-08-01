@@ -1,5 +1,3 @@
-#include <string>
-
 #include "Usuario.h"
 
 using namespace std;

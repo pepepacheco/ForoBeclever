@@ -1,14 +1,13 @@
 #include "Foro.h"
 #include "Usuario.h"
 #include "Tema.h"
-#include <vector>
-#include <iostream>
+
 using namespace std;
 
 Foro::Foro(string nombre) {
     this->nombre = nombre;
     temas = new vector<Tema>;
-    usuarios = new vector<Usuario>();
+    usuarios = new vector<Usuario>;
 }
 
 Usuario* Foro::nuevoUsuario(string nombre, string alias, string clave) {
@@ -48,8 +47,8 @@ void Foro::verUsuarios() {
 */
 
 void Foro::verUsuarios() {
-    cout << usuarios->size() << endl;
+    //cout << usuarios->size() << endl;
     for (int i = 0; i < usuarios->size(); i++) {
-        cout << (usuarios->at(i)).getNombre() << endl;
+        //cout << (usuarios->at(i)).getNombre() << endl;
     }
 }

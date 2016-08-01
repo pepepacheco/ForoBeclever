@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=ForoBeclever
+PROJECTNAME=Foro
 
 # Active Configuration
 DEFAULTCONF=Debug
