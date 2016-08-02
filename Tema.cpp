@@ -20,9 +20,9 @@ Hilo* Tema::nuevoHilo(string titulo, Mensaje *mensajeInicial){
 
 vector<Hilo>* Tema::buscarHilos(string termino) {
     vector<Hilo> *resultado = new vector<Hilo>;
-/*    for (int i = 0; i < this->hilos.size(); i++) {
-        if (hilos.at(i).getTitulo().find(termino) != -1)
-            resultado->push_back(hilos.at(i));
-    }  */
+    for (int i = 0; i < this->hilos->size(); i++) {
+        if (this->hilos->at(i).getTitulo().find(termino) != -1)
+            resultado->push_back(hilos->at(i));
+    }  
     return resultado;
 }

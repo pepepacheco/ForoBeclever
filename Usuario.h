@@ -12,6 +12,8 @@ class Usuario {
         string getAlias() {return this->alias;}
         string getPass() {return this->clave;}
         bool validarClave(string clave); 
+        void cambiarNombre(string nombre){this->nombre = nombre;}
+        void cambiarAlias(string alias){this->alias = alias;}
         void cambiarClave(string clave){this->clave = clave;}
         ~Usuario(){};
 };

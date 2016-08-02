@@ -1,11 +1,15 @@
 #include "Vista.h"
+#include "VistaInvitado.h"
 #include <iostream>
-#include <stdlib.h>
 
 using namespace std;
 
-Vista::Vista() {
-    foro = new Foro("Beclever");
+Vista::Vista(Foro *f) {
+    if (f == NULL) 
+        foro = new Foro("Beclever");
+    else
+        foro = f;
+    
     mensajeInicial();
 }
 
@@ -26,8 +30,7 @@ void Vista::mensajeInicial() {
                 login();
                 break;
             case 3:
-                cout << "Elegido 3" << endl;
-                exit(0);
+                new VistaInvitado(this->foro);
                 break;
             default:
                 continue;       
@@ -42,10 +45,18 @@ void Vista::registro() {
     string pass;
     string pass2;
     
-    cout << "\nRegistro:" << endl
-    << "====================================================" << endl
-    << "\nIntroduce un nombre de usuario:" << endl;
-    cin >> nombreUsuario;
+    while (true) {
+        cout << "\nRegistro:" << endl
+        << "====================================================" << endl
+        << "\nIntroduce un nombre de usuario:" << endl;
+        cin >> nombreUsuario;
+        
+        if (foro->usuarioPorNombre(nombreUsuario) != NULL)
+            cout << "\nEste nombre de usuario ya existe!!" << endl;
+        else
+            break;
+    }    
+     
     cout << "Introduce un alias:" << endl;
     cin >> alias;
     
@@ -57,8 +68,7 @@ void Vista::registro() {
         if (pass.compare(pass2) == 0)
             break;
         else {
-            cout << endl << "=== Las claves no coinciden ===" << endl << endl;
-            continue;          
+            cout << endl << "=== Las claves no coinciden ===" << endl << endl;         
         }             
     }
     foro->nuevoUsuario(nombreUsuario, alias, pass);   
@@ -67,34 +77,39 @@ void Vista::registro() {
 
 void Vista::login() {	
         cout << "\nLogin (\"exit\" para salir)" << endl
-        << "====================================================\n" << endl;    
+        << "====================================================\n" << endl; 
+        
 	string usuario;
 	string pass;
+        
         bool login = false;
         do {        
             cout << "Usuario:" << endl;
             cin >> usuario;
             
-            if (usuario.compare("exit") == 0 or pass.compare("exit") == 0)
+            if (usuario.compare("exit") == 0)
                 mensajeInicial();
+            
+            Usuario *u = foro->usuarioPorNombre(usuario);
+            
+            if (u == NULL){
+                cout << "El usuario no existe" << endl;
+                continue;
+            }
             
             cout << "Clave:" << endl;
             cin >> pass;      
             
-            if (usuario.compare("exit") == 0 or pass.compare("exit") == 0)
-                mensajeInicial();
+            if (pass.compare("exit") == 0)
+                mensajeInicial();        
 
-            for (int i = 0; i < foro->getUsuarios()->size(); i++ ) {
-                if ((foro->getUsuarios()->at(i).getNombre().compare(usuario) == 0) && (foro->getUsuarios()->at(i).getPass().compare(pass) == 0)){
-                    login = true;
-                    vistaForo(&(foro->getUsuarios()->at(i)));
-                }    
+            if (u->validarClave(pass) == 0){
+                login = true;
+                vistaForo(u);
             }
-            if (!login)
-                cout << "\nLogin incorrecto\n" << endl;
-        }
-        while (!login);     
-        
+            else
+                cout << "\nLogin incorrecto\n" << endl;             
+        } while (!login);    
 }
 
 void Vista::vistaForo(Usuario *u) {
@@ -105,8 +120,9 @@ void Vista::vistaForo(Usuario *u) {
     while (true) {       
         cout << "1: Crear Tema" <<endl
         << "2: Ver temas" << endl
-        << "3: Configuracion de usuario " << endl
-        << "4: Cerrar sesion y salir al menu principal" << endl;        
+        << "3: Buscar temas" << endl        
+        << "4: Configuracion de usuario " << endl
+        << "5: Cerrar sesion y salir al menu principal" << endl;        
         cin >> resultado;       
         switch (resultado) {
             case 1:
@@ -116,9 +132,12 @@ void Vista::vistaForo(Usuario *u) {
                 verTemas(u);
                 break;
             case 3:
-                cout << "Elegido 3" << endl;
+                buscarTemas(u);
                 break;
             case 4:
+                menuUsuario(u);
+                break;
+            case 5:
                 mensajeInicial();
                 break;
             default:
@@ -168,7 +187,128 @@ void Vista::verTemas(Usuario* u) {
         cout << "0" << endl;
     
     vistaForo(u);
-   
+
+}
+
+void Vista::buscarTemas(Usuario* u) {
+    string criterio;
+    int numeroTema;
+    Tema *t;
+    
+    cout << "\nIntroduzca un criterio de busqueda:" << endl;
+    cin >> criterio;
+    
+    vector<Tema> *resultado = foro->buscarTemas(criterio);
+    
+    cout << "\n----- Temas encontrados -----\n" << endl;
+    for (int i = 0; i < resultado->size(); i++) {
+        cout << i+1 << "-> " << resultado->at(i).getDenominacion() << endl;
+    }
+    
+    do {
+        cout << "\nIntroduce el numero de tema para acceder a el" << endl
+                << "0 para volver al menu de temas" << endl;
+        cin >> numeroTema;
+    } while (!(numeroTema >= 0 && numeroTema <= resultado->size()));
+
+    if (numeroTema == 0)
+        vistaForo(u);
+    else {
+        t = &(resultado->at(numeroTema - 1));
+        menuTema(u, t);
+    }     
+}
+
+void Vista::menuUsuario(Usuario* u) {
+    cout << "\nConfiguracion de usuario" << endl
+    << "====================================================\n" << endl;      
+    
+    int resultado;
+    while (true) {       
+        cout << "1: Cambiar nombre" <<endl
+        << "2: Cambiar alias" << endl
+        << "3: Cambiar clave" << endl
+        << "4: Volver al menu del foro" << endl;        
+        cin >> resultado;       
+        switch (resultado) {
+            case 1:
+                menuCambiarNombre(u);
+                break;
+            case 2:
+                menuCambiarAlias(u);
+                break;
+            case 3:
+                menuCambiarClave(u);
+                break;
+            case 4:
+                vistaForo(u);
+                break;
+            default:
+                continue;       
+        }
+    break;
+    }    
+}
+
+void Vista::menuCambiarNombre(Usuario* u) {
+    string nuevoNombre;    
+    while (true) {
+        cout << "\nIntroduce un nuevo nombre de usuario:" << endl;
+        cin >> nuevoNombre;
+        
+        if (foro->usuarioPorNombre(nuevoNombre) != NULL)
+            cout << "\nEste nombre de usuario ya existe!!" << endl;
+        else
+            break;
+    }      
+    u->cambiarNombre(nuevoNombre);
+    cout << "\nNombre cambiado correctamente" << endl;
+    menuUsuario(u);
+}
+
+void Vista::menuCambiarAlias(Usuario* u) {
+    string nuevoAlias;
+
+    cout << "\nIntroduce un nuevo alias:" << endl;
+    cin >> nuevoAlias;
+
+    u->cambiarAlias(nuevoAlias);
+    cout << "\nAlias cambiado correctamente" << endl;
+    
+    menuUsuario(u);    
+}
+
+void Vista::menuCambiarClave(Usuario* u) {
+    string oldPass;
+    string newPass;
+    string newPass2;
+    
+    while (true) {
+        cout << "\nIntroduce la clave actual" << endl;
+        cin >> oldPass;
+        
+        if (u->validarClave(oldPass) == 0)
+            break;
+        else
+            cout << "\nClave incorrecta" << endl;
+    }
+    
+    while (true) {
+        cout << "Introduce la nueva clave" << endl;
+        cin >> newPass;
+        cout << "Vuelve a introducir la clave" << endl;
+        cin >> newPass2;
+        if (newPass.compare(newPass2) == 0)
+            break;
+        else {
+            cout << endl << "=== Las claves no coinciden ===" << endl << endl;      
+        }             
+    }
+    u->cambiarClave(newPass);
+    
+    cout << "\nClave cambiada correctamente" << endl;
+    
+    menuUsuario(u);
 }
 
 void Vista::menuTema(Usuario*u, Tema *t) {
@@ -180,8 +320,8 @@ void Vista::menuTema(Usuario*u, Tema *t) {
     while (true) {       
         cout << "1: Nuevo hilo" <<endl
         << "2: Ver hilos" << endl
-        << "3: Buscar hilo por nombre " << endl
-        << "4: Volver al menu de temas" << endl;        
+        << "3: Buscar hilo" << endl
+        << "4: Volver al menu del Foro" << endl;        
         cin >> resultado;       
         switch (resultado) {
             case 1:
@@ -191,10 +331,10 @@ void Vista::menuTema(Usuario*u, Tema *t) {
                 verHilos(u, t);
                 break;
             case 3:
-                cout << "Elegido 3" << endl;
+                buscarHilos(u, t);
                 break;
             case 4:
-                verTemas(u);
+                vistaForo(u);
                 break;
             default:
                 continue;      
@@ -253,6 +393,35 @@ void Vista::verHilos(Usuario* u, Tema* t) {
 
 }
 
+void Vista::buscarHilos(Usuario* u, Tema* t) {
+    string criterio;
+    int numeroHilo;
+    Hilo *h;
+    
+    cout << "\nIntroduzca un criterio de busqueda:" << endl;
+    cin >> criterio;
+    
+    vector<Hilo> *resultado = t->buscarHilos(criterio);
+    
+    cout << "\n----- Hilos encontrados -----\n" << endl;
+    for (int i = 0; i < resultado->size(); i++) {
+        cout << i+1 << "-> " << resultado->at(i).getTitulo() << endl;
+    }
+    
+    do {
+        cout << "\nIntroduce el numero de hilo para acceder a el" << endl
+                << "0 para volver al menu de temas" << endl;
+        cin >> numeroHilo;
+    } while (!(numeroHilo >= 0 && numeroHilo <= resultado->size()));
+
+    if (numeroHilo == 0)
+        menuTema(u, t);
+    else {
+        h = &(resultado->at(numeroHilo - 1));
+        menuHilo(u, t, h);
+    }        
+}
+
 void Vista::menuHilo(Usuario* u, Tema *t, Hilo* h) {
     int resultado;
 
@@ -262,7 +431,8 @@ void Vista::menuHilo(Usuario* u, Tema *t, Hilo* h) {
     while (true) {       
         cout << "1: Nuevo mensaje" <<endl
         << "2: Ver mensajes" << endl
-        << "3: Volver al menu de hilos " << endl;     
+        << "3: Buscar mensajes" << endl
+        << "4: Volver al menu de Temas " << endl;     
         cin >> resultado;       
         switch (resultado) {
             case 1:
@@ -272,7 +442,10 @@ void Vista::menuHilo(Usuario* u, Tema *t, Hilo* h) {
                 verMensajes(u, t, h);
                 break;
             case 3:
-                verHilos(u, t);
+                buscarMensajes(u, t, h);
+                break;
+            case 4:
+                menuTema(u, t);
                 break;
             default:
                 continue;      
@@ -313,12 +486,26 @@ void Vista::verMensajes(Usuario* u, Tema* t, Hilo* h) {
     menuHilo(u, t, h);
 }
 
-
-
-
-
-
-
-
-
-
+void Vista::buscarMensajes(Usuario* u, Tema* t, Hilo* h) {
+    string criterio;
+    char caracter = ' ';
+    
+    cout << "\nIntroduzca un criterio de busqueda:" << endl;
+    cin >> criterio;
+    
+    vector<Mensaje> *resultado = h->buscarMensajes(criterio);
+    
+    cout << "\n----- Mensajes encontrados -----\n" << endl;
+    for (int i = 0; i < resultado->size(); i++) {
+        cout << i+1 << "-> " << "Autor: " << h->verMensaje(i).verAutor()->getAlias() << " | Fecha: " << h->verMensaje(i).getFecha()->getFecha() << endl
+        << "Mensaje: " << endl << h->verMensaje(i).getContenido() << endl << endl;
+    } 
+    
+    do {
+        cout << "\nPulse una tecla para regresar" << endl;
+        cin >> caracter;
+    }
+    while (caracter == ' ');
+    
+    menuHilo(u, t, h);    
+}

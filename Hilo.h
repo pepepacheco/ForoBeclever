@@ -17,6 +17,7 @@ class Hilo {
         Mensaje nuevoMensaje(string contenido, Usuario *usuario);
         int numMensajes(){return this->mensajes->size();}
         Mensaje verMensaje(int numeroMensaje){return mensajes->at(numeroMensaje);}
+        vector<Mensaje> *buscarMensajes(string termino);
         ~Hilo(){}
 };
 

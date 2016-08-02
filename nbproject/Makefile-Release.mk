@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Tema.o \
 	${OBJECTDIR}/Usuario.o \
 	${OBJECTDIR}/Vista.o \
+	${OBJECTDIR}/VistaInvitado.o \
 	${OBJECTDIR}/main.o
 
 
@@ -103,6 +104,11 @@ ${OBJECTDIR}/Vista.o: Vista.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Vista.o Vista.cpp
+
+${OBJECTDIR}/VistaInvitado.o: VistaInvitado.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/VistaInvitado.o VistaInvitado.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}

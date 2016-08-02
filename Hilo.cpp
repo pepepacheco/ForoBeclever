@@ -14,3 +14,12 @@ Mensaje Hilo::nuevoMensaje(string contenido, Usuario *usuario){
     
     return *mensaje;   
 }
+
+vector<Mensaje>* Hilo::buscarMensajes(string termino) {
+    vector<Mensaje> *resultado = new vector<Mensaje>;
+    for (int i = 0; i < this->mensajes->size(); i++) {
+        if (this->mensajes->at(i).getContenido().find(termino) != -1)
+            resultado->push_back(mensajes->at(i));
+    }  
+    return resultado;    
+}

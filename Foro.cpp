@@ -15,22 +15,13 @@ Usuario* Foro::nuevoUsuario(string nombre, string alias, string clave) {
     this->usuarios->push_back(*u);    
     return u;
 }
-/*
-Usuario* Foro::usuarioPorAlias(string alias) {
-    for (set<Usuario>::iterator it = usuarios->begin(); it != usuarios->end(); it++) {
-        if (it._M_const_cast()->getNombre().compare(alias))
-            return &(it._M_const_cast().operator *());            
-    }
-    return NULL;
-}
-*/
 
-Usuario* Foro::usuarioPorAlias(string alias) {
+Usuario* Foro::usuarioPorNombre(string nombre) {
     for (int i = 0; i < usuarios->size(); i++) {
-        if (usuarios->at(i).getAlias().compare(alias))
+        if (usuarios->at(i).getNombre().compare(nombre) == 0)
             return &(usuarios->at(i));
     }
-    return NULL;
+    return NULL;    
 }
 
 Tema* Foro::nuevoTema(string denominacion) {
@@ -38,17 +29,12 @@ Tema* Foro::nuevoTema(string denominacion) {
     this->temas->push_back(*t);
     return t;
 }
-/*
-void Foro::verUsuarios() {
-    for (set<Usuario>::iterator it = usuarios->begin(); it != usuarios->end(); it++) {
-        cout << it._M_const_cast()->getNombre() << endl;
-    }    
-}
-*/
 
-void Foro::verUsuarios() {
-    //cout << usuarios->size() << endl;
-    for (int i = 0; i < usuarios->size(); i++) {
-        //cout << (usuarios->at(i)).getNombre() << endl;
-    }
+vector<Tema>* Foro::buscarTemas(string termino) {
+    vector<Tema> *resultado = new vector<Tema>;
+    for (int i = 0; i < this->temas->size(); i++) {
+        if (this->temas->at(i).getDenominacion().find(termino) != -1)
+            resultado->push_back(temas->at(i));
+    }  
+    return resultado;    
 }
