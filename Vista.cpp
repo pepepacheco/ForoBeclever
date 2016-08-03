@@ -2,6 +2,12 @@
 #include "VistaInvitado.h"
 #include <iostream>
 
+#ifdef __cplusplus__
+  #include <cstdlib>
+#else
+  #include <stdlib.h>
+#endif
+
 using namespace std;
 
 Vista::Vista(Foro *f) {
@@ -24,12 +30,15 @@ void Vista::mensajeInicial() {
         cin >> resultado;       
         switch (resultado) {
             case 1:
+            if (system("CLS")) system("clear");
                 registro();
                 break;
             case 2:
+                if (system("CLS")) system("clear");
                 login();
                 break;
             case 3:
+                if (system("CLS")) system("clear");
                 new VistaInvitado(this->foro);
                 break;
             default:
@@ -71,7 +80,8 @@ void Vista::registro() {
             cout << endl << "=== Las claves no coinciden ===" << endl << endl;         
         }             
     }
-    foro->nuevoUsuario(nombreUsuario, alias, pass);   
+    foro->nuevoUsuario(nombreUsuario, alias, pass);
+    if (system("CLS")) system("clear");
     mensajeInicial();
 }
 
@@ -87,8 +97,10 @@ void Vista::login() {
             cout << "Usuario:" << endl;
             cin >> usuario;
             
-            if (usuario.compare("exit") == 0)
+            if (usuario.compare("exit") == 0) {
+                if (system("CLS")) system("clear");
                 mensajeInicial();
+            }
             
             Usuario *u = foro->usuarioPorNombre(usuario);
             
@@ -100,11 +112,14 @@ void Vista::login() {
             cout << "Clave:" << endl;
             cin >> pass;      
             
-            if (pass.compare("exit") == 0)
-                mensajeInicial();        
+            if (pass.compare("exit") == 0) {
+                if (system("CLS")) system("clear");
+                mensajeInicial();
+            }
 
             if (u->validarClave(pass) == 0){
                 login = true;
+                if (system("CLS")) system("clear");
                 vistaForo(u);
             }
             else
@@ -126,18 +141,23 @@ void Vista::vistaForo(Usuario *u) {
         cin >> resultado;       
         switch (resultado) {
             case 1:
+                if (system("CLS")) system("clear");
                 crearTema(u);
                 break;
             case 2:
+                if (system("CLS")) system("clear");
                 verTemas(u);
                 break;
             case 3:
+                if (system("CLS")) system("clear");
                 buscarTemas(u);
                 break;
             case 4:
+                if (system("CLS")) system("clear");
                 menuUsuario(u);
                 break;
             case 5:
+                if (system("CLS")) system("clear");
                 mensajeInicial();
                 break;
             default:
@@ -154,6 +174,7 @@ void Vista::crearTema(Usuario *u) {
     getline(cin, titulo);
     foro->nuevoTema(titulo);
     cout << "Nuevo tema: " << "\"" << titulo << "\"" << " creado correctamente" << endl;
+    if (system("CLS")) system("clear");
     vistaForo(u);
     
 }
@@ -176,16 +197,20 @@ void Vista::verTemas(Usuario* u) {
         }
         while (!(numeroTema >= 0 && numeroTema <= foro->numTemas()));
 
-        if (numeroTema == 0)
+        if (numeroTema == 0) {
+            if (system("CLS")) system("clear");
             vistaForo(u);
+        }
         else {
             t = foro->verTema(numeroTema - 1);
+            if (system("CLS")) system("clear");
             menuTema(u, t);
         }        
     }
     else
         cout << "0" << endl;
     
+    if (system("CLS")) system("clear");
     vistaForo(u);
 
 }
@@ -211,10 +236,13 @@ void Vista::buscarTemas(Usuario* u) {
         cin >> numeroTema;
     } while (!(numeroTema >= 0 && numeroTema <= resultado->size()));
 
-    if (numeroTema == 0)
+    if (numeroTema == 0) {
+        if (system("CLS")) system("clear");
         vistaForo(u);
+    }
     else {
         t = &(resultado->at(numeroTema - 1));
+        if (system("CLS")) system("clear");
         menuTema(u, t);
     }     
 }
@@ -232,15 +260,19 @@ void Vista::menuUsuario(Usuario* u) {
         cin >> resultado;       
         switch (resultado) {
             case 1:
+                if (system("CLS")) system("clear");
                 menuCambiarNombre(u);
                 break;
             case 2:
+                if (system("CLS")) system("clear");
                 menuCambiarAlias(u);
                 break;
             case 3:
+                if (system("CLS")) system("clear");
                 menuCambiarClave(u);
                 break;
             case 4:
+                if (system("CLS")) system("clear");
                 vistaForo(u);
                 break;
             default:
@@ -263,6 +295,7 @@ void Vista::menuCambiarNombre(Usuario* u) {
     }      
     u->cambiarNombre(nuevoNombre);
     cout << "\nNombre cambiado correctamente" << endl;
+    if (system("CLS")) system("clear");
     menuUsuario(u);
 }
 
@@ -275,6 +308,7 @@ void Vista::menuCambiarAlias(Usuario* u) {
     u->cambiarAlias(nuevoAlias);
     cout << "\nAlias cambiado correctamente" << endl;
     
+    if (system("CLS")) system("clear");
     menuUsuario(u);    
 }
 
@@ -308,6 +342,7 @@ void Vista::menuCambiarClave(Usuario* u) {
     
     cout << "\nClave cambiada correctamente" << endl;
     
+    if (system("CLS")) system("clear");
     menuUsuario(u);
 }
 
@@ -325,15 +360,19 @@ void Vista::menuTema(Usuario*u, Tema *t) {
         cin >> resultado;       
         switch (resultado) {
             case 1:
+                if (system("CLS")) system("clear");
                 crearHilo(u, t);
                 break;
             case 2:
+                if (system("CLS")) system("clear");
                 verHilos(u, t);
                 break;
             case 3:
+                if (system("CLS")) system("clear");
                 buscarHilos(u, t);
                 break;
             case 4:
+                if (system("CLS")) system("clear");
                 vistaForo(u);
                 break;
             default:
@@ -352,12 +391,12 @@ void Vista::crearHilo(Usuario* u, Tema *t) {
     getline(cin, titulo);
     
     cout << "\nIntroduce un mensaje inicial" << endl;
-    cin.ignore();
     getline(cin, mensajeInicial);
     
     t->nuevoHilo(titulo, new Mensaje(mensajeInicial, u));
     cout << "Nuevo hilo: " << "\"" << titulo << "\"" << " creado correctamente" << endl;
     
+    if (system("CLS")) system("clear");
     menuTema(u, t);
 }
 
@@ -379,16 +418,20 @@ void Vista::verHilos(Usuario* u, Tema* t) {
             cin >> numeroHilo;
         } while (!(numeroHilo >= 0 && numeroHilo <= t->numeroHilo()));
 
-        if (numeroHilo == 0)
+        if (numeroHilo == 0) {
+            if (system("CLS")) system("clear");
             menuTema(u, t);
+        }
         else {
             h = t->verHilo(numeroHilo - 1);
+            if (system("CLS")) system("clear");
             menuHilo(u, t, h);
         }
     }
     else
         cout << "0" << endl;
     
+    if (system("CLS")) system("clear");
     menuTema(u, t);
 
 }
@@ -414,10 +457,13 @@ void Vista::buscarHilos(Usuario* u, Tema* t) {
         cin >> numeroHilo;
     } while (!(numeroHilo >= 0 && numeroHilo <= resultado->size()));
 
-    if (numeroHilo == 0)
+    if (numeroHilo == 0) {
+        if (system("CLS")) system("clear");
         menuTema(u, t);
+    }
     else {
         h = &(resultado->at(numeroHilo - 1));
+        if (system("CLS")) system("clear");
         menuHilo(u, t, h);
     }        
 }
@@ -436,15 +482,19 @@ void Vista::menuHilo(Usuario* u, Tema *t, Hilo* h) {
         cin >> resultado;       
         switch (resultado) {
             case 1:
+                if (system("CLS")) system("clear");
                 crearMensaje(u, t, h);
                 break;
             case 2:
+                if (system("CLS")) system("clear");
                 verMensajes(u, t, h);
                 break;
             case 3:
+                if (system("CLS")) system("clear");
                 buscarMensajes(u, t, h);
                 break;
             case 4:
+                if (system("CLS")) system("clear");
                 menuTema(u, t);
                 break;
             default:
@@ -463,6 +513,7 @@ void Vista::crearMensaje(Usuario* u, Tema* t, Hilo* h) {
     
     h->nuevoMensaje(contenidoMensaje, u);
     
+    if (system("CLS")) system("clear");
     menuHilo(u, t, h);
 }
 
@@ -483,6 +534,7 @@ void Vista::verMensajes(Usuario* u, Tema* t, Hilo* h) {
     }
     while (caracter == ' ');
     
+    if (system("CLS")) system("clear");
     menuHilo(u, t, h);
 }
 
@@ -507,5 +559,6 @@ void Vista::buscarMensajes(Usuario* u, Tema* t, Hilo* h) {
     }
     while (caracter == ' ');
     
+    if (system("CLS")) system("clear");
     menuHilo(u, t, h);    
 }

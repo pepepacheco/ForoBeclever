@@ -2,6 +2,12 @@
 #include "Vista.h"
 #include <iostream>
 
+#ifdef __cplusplus__
+  #include <cstdlib>
+#else
+  #include <stdlib.h>
+#endif
+
 using namespace std;
 
 VistaInvitado::VistaInvitado(Foro *f) {
@@ -21,13 +27,16 @@ void VistaInvitado::vistaForo(Usuario *u) {
         cin >> resultado;       
         switch (resultado) {
             case 1:
+                if (system("CLS")) system("clear");
                 verTemas(u);
                 break;
             case 2:
+                if (system("CLS")) system("clear");
                 buscarTemas(u);
                 break;
             case 3:
                 delete u;
+                if (system("CLS")) system("clear");
                 new Vista(this->foro);
                 break;
             default:
@@ -55,16 +64,20 @@ void VistaInvitado::verTemas(Usuario* u) {
         }
         while (!(numeroTema >= 0 && numeroTema <= foro->numTemas()));
 
-        if (numeroTema == 0)
+        if (numeroTema == 0) {
+            if (system("CLS")) system("clear");
             vistaForo(u);
+        }
         else {
             t = foro->verTema(numeroTema - 1);
+            if (system("CLS")) system("clear");
             menuTema(u, t);
         }        
     }
     else
         cout << "0" << endl;
     
+    if (system("CLS")) system("clear");
     vistaForo(u);
 
 }
@@ -90,10 +103,13 @@ void VistaInvitado::buscarTemas(Usuario* u) {
         cin >> numeroTema;
     } while (!(numeroTema >= 0 && numeroTema <= resultado->size()));
 
-    if (numeroTema == 0)
+    if (numeroTema == 0) {
+        if (system("CLS")) system("clear");
         vistaForo(u);
+    }
     else {
         t = &(resultado->at(numeroTema - 1));
+        if (system("CLS")) system("clear");
         menuTema(u, t);
     }     
 }
@@ -111,12 +127,15 @@ void VistaInvitado::menuTema(Usuario*u, Tema *t) {
         cin >> resultado;       
         switch (resultado) {
             case 1:
+                if (system("CLS")) system("clear");
                 verHilos(u, t);
                 break;
             case 2:
+                if (system("CLS")) system("clear");
                 buscarHilos(u, t);
                 break;
             case 3:
+                if (system("CLS")) system("clear");
                 vistaForo(u);
                 break;
             default:
@@ -144,16 +163,20 @@ void VistaInvitado::verHilos(Usuario* u, Tema* t) {
             cin >> numeroHilo;
         } while (!(numeroHilo >= 0 && numeroHilo <= t->numeroHilo()));
 
-        if (numeroHilo == 0)
+        if (numeroHilo == 0) {
+            if (system("CLS")) system("clear");
             menuTema(u, t);
+        }
         else {
             h = t->verHilo(numeroHilo - 1);
+            if (system("CLS")) system("clear");
             menuHilo(u, t, h);
         }
     }
     else
         cout << "0" << endl;
     
+    if (system("CLS")) system("clear");
     menuTema(u, t);
 
 }
@@ -179,10 +202,13 @@ void VistaInvitado::buscarHilos(Usuario* u, Tema* t) {
         cin >> numeroHilo;
     } while (!(numeroHilo >= 0 && numeroHilo <= resultado->size()));
 
-    if (numeroHilo == 0)
+    if (numeroHilo == 0) {
+        if (system("CLS")) system("clear");
         menuTema(u, t);
+    }
     else {
         h = &(resultado->at(numeroHilo - 1));
+        if (system("CLS")) system("clear");
         menuHilo(u, t, h);
     }        
 }
@@ -200,12 +226,15 @@ void VistaInvitado::menuHilo(Usuario* u, Tema *t, Hilo* h) {
         cin >> resultado;       
         switch (resultado) {
             case 1:
+                if (system("CLS")) system("clear");
                 verMensajes(u, t, h);
                 break;
             case 2:
+                if (system("CLS")) system("clear");
                 buscarMensajes(u, t, h);
                 break;
             case 3:
+                if (system("CLS")) system("clear");
                 menuTema(u, t);
                 break;
             default:
@@ -232,6 +261,7 @@ void VistaInvitado::verMensajes(Usuario* u, Tema* t, Hilo* h) {
     }
     while (caracter == ' ');
     
+    if (system("CLS")) system("clear");
     menuHilo(u, t, h);
 }
 
@@ -256,5 +286,6 @@ void VistaInvitado::buscarMensajes(Usuario* u, Tema* t, Hilo* h) {
     }
     while (caracter == ' ');
     
+    if (system("CLS")) system("clear");
     menuHilo(u, t, h);    
 }
