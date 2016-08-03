@@ -3,16 +3,11 @@
 
 using namespace std;
 
-Hilo::Hilo(string titulo) {
-    this->titulo = titulo;
-    this->mensajes = new vector<Mensaje>;
-}
-
-Mensaje Hilo::nuevoMensaje(string contenido, Usuario *usuario){
+Mensaje* Hilo::nuevoMensaje(string contenido, Usuario *usuario){
     Mensaje *mensaje = new Mensaje(contenido, usuario);
     this->mensajes->push_back(*mensaje);
     
-    return *mensaje;   
+    return mensaje;   
 }
 
 vector<Mensaje>* Hilo::buscarMensajes(string termino) {

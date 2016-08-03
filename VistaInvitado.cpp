@@ -251,8 +251,8 @@ void VistaInvitado::verMensajes(Usuario* u, Tema* t, Hilo* h) {
     << "====================================================\n" << endl;    
     
     for (int i = 0; i < h->numMensajes(); i++) {
-        cout << i+1 << "-> " << "Autor: " << h->verMensaje(i).verAutor()->getAlias() << " | Fecha: " << h->verMensaje(i).getFecha()->getFecha() << endl
-        << "Mensaje: " << endl << h->verMensaje(i).getContenido() << endl << endl;
+        cout << i+1 << "-> " << "Autor: " << h->verMensaje(i)->verAutor()->getAlias() << " | Fecha: " << h->verMensaje(i)->getFecha()->getFecha() << endl
+        << "Mensaje: " << endl << h->verMensaje(i)->getContenido() << endl << endl;
     }
     
     do {
@@ -276,8 +276,8 @@ void VistaInvitado::buscarMensajes(Usuario* u, Tema* t, Hilo* h) {
     
     cout << "\n----- Mensajes encontrados -----\n" << endl;
     for (int i = 0; i < resultado->size(); i++) {
-        cout << i+1 << "-> " << "Autor: " << h->verMensaje(i).verAutor()->getAlias() << " | Fecha: " << h->verMensaje(i).getFecha()->getFecha() << endl
-        << "Mensaje: " << endl << h->verMensaje(i).getContenido() << endl << endl;
+        cout << i+1 << "-> " << "Autor: " << h->verMensaje(i)->verAutor()->getAlias() << " | Fecha: " << h->verMensaje(i)->getFecha()->getFecha() << endl
+        << "Mensaje: " << endl << h->verMensaje(i)->getContenido() << endl << endl;
     } 
     
     do {

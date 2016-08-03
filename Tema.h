@@ -9,13 +9,13 @@ class Tema {
     string denominacion;
     
     public:
-        Tema(string denominacion);
+        Tema(string denominacion) : denominacion(denominacion) {hilos = new vector<Hilo>;}
         string getDenominacion() {return this->denominacion;}
         int numeroHilo() {return this->hilos->size();}
         Hilo *verHilo(int numHilo) {return &(this->hilos->at(numHilo));}
         Hilo *nuevoHilo(string titulo, Mensaje *mensajeInicial);
-        int numeroMensajes(Hilo *hilo){return hilo->numMensajes();}
-        vector<Hilo> *buscarHilos(string termino);
+        int numeroMensajes();
+        vector<Hilo>* buscarHilos(string termino);
         ~Tema(){}
 };
 

@@ -10,6 +10,7 @@ class Mensaje {
     Fecha *fecha;
     string contenido;
     Usuario *autor;
+    
     public:
         Mensaje(string contenido, Usuario *autor):contenido(contenido), autor(autor){fecha = new Fecha();}
         Fecha *getFecha(){return this->fecha;}

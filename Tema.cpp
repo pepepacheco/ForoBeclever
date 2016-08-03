@@ -4,18 +4,20 @@
 
 using namespace std;
 
-Tema::Tema(string denominacion) {
-    this->denominacion = denominacion;
-    this->hilos = new vector<Hilo>;
-}
-
 Hilo* Tema::nuevoHilo(string titulo, Mensaje *mensajeInicial){
     Hilo *hilo = new Hilo(titulo);
     hilo->getMensajes()->push_back(*mensajeInicial);
     this->hilos->push_back(*hilo);
     
-    
     return hilo;
+}
+
+int Tema::numeroMensajes() {
+    int numeroMensajesTotal;
+    for (int i = 0; i < hilos->size(); i++) {
+        numeroMensajesTotal += hilos->at(i).numMensajes();
+    }
+    return numeroMensajesTotal;
 }
 
 vector<Hilo>* Tema::buscarHilos(string termino) {

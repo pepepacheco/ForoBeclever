@@ -6,6 +6,7 @@ using namespace std;
 
 class Usuario {
     string nombre, alias, clave;
+    
     public:
         Usuario(string nombre, string alias, string clave) : nombre(nombre), alias(alias), clave(clave) {}
         string getNombre() {return this->nombre;}
